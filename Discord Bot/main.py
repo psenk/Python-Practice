@@ -59,8 +59,5 @@ async def on_message(message):
       await message.channel.send("Unknown command.")
       print("Error: unknown command.\n")
 
-  if message.content.lower() == "fuck you parry":
-    await message.channel.send("Yeah, fuck you Parry!")
-
 # start bot
 client.run(TOKEN)
