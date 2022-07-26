@@ -2,7 +2,7 @@ import discord
 import os
 import utils
 
-TOKEN = "OTg2NTE3NTE0MDMwODE3MzAw.GPnSRX.072RXVLC7PcFs7CtedCAnfI0yoTj2oa28lnTyQ"
+TOKEN = "xxx"
 
 # connects to discord websocket and api
 client = discord.Client()
