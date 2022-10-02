@@ -12,6 +12,12 @@ TORAG_LOOT = ["Torag's Helm", "Torag's Platebody", "Torag's Platelegs", "Torag's
 VERAC_LOOT = ["Verac's Helm", "Verac's Brassard", "Verac's Plateskirt", "Verac's Flail"]
 DIFFICULTY_MOD = {"Coin_Diff": 2.03, "Mind_Diff": 1.5, "Chaos_Diff": 4.5, "Death_Diff": 9.15, "Blood_Diff": 20.44, "Bolt_Diff": 25.14}
 
+# for saving multiple sims loot
+s_save_loot = []
+s_coin_amt, s_mind_rune_amt, s_chaos_rune_amt, s_death_rune_amt, s_blood_rune_amt, s_bolt_amt = 0, 0, 0, 0, 0, 0
+multi_input = 0
+
+# functions
 def add_loot_and_rwd_potential(brother_name, list_const, reward): # add loot to table, calc rwd potential
     global rwd_potential
     if brother_name in bros_killed_list:
@@ -35,7 +41,7 @@ def add_to_chest(amt, title, save = 0): # add item to final chest
         else:
             s_save_loot.append(str(amt) + " " + title)
 
-def add_to_save_loot():
+def add_to_save_loot(): # add items to saved loot
     add_to_chest(s_coin_amt, "Coins", 1) # add coins
     add_to_chest(s_mind_rune_amt, "Mind Runes", 1) # add mind runes
     add_to_chest(s_chaos_rune_amt, "Chaos Runes", 1) # add chaos runes
@@ -43,10 +49,6 @@ def add_to_save_loot():
     add_to_chest(s_blood_rune_amt, "Blood Runes", 1) # add chaos runes
     add_to_chest(s_bolt_amt, "Bolt Racks", 1)
 
-s_save_loot = []
-
-# TODO: convert/combine with main function
-"""
 def repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag, save = 0): # funct for performing multiple sims
     def r_roll_for_runes(min_roll, roll, max_roll, ratio):
         if max_roll >= roll >= min_roll:
@@ -59,12 +61,6 @@ def repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag
         if amt != 0:
             amt = int(amt)
             r_final_loot_list.append(str(amt) + " " + title)
-
-    r_final_loot_list = []
-    r_coin_amt, r_mind_rune_amt, r_chaos_rune_amt, r_death_rune_amt, r_blood_rune_amt, r_bolt_amt = 0, 0, 0, 0, 0, 0
-    r_d_med_flag, r_lh_key_flag, r_th_key_flag = False, False, False
-    global s_coin_amt, s_mind_rune_amt, s_chaos_rune_amt, s_death_rune_amt, s_blood_rune_amt, s_bolt_amt
-    #global s_save_loot
     
     for x in range(1, len(bros_killed_list) + 2): # add items to loot table
         r_item_roll = 0
@@ -75,7 +71,7 @@ def repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag
             if r_reward_item not in r_final_loot_list: # can't have same item in chest twice
                 r_final_loot_list.append(r_reward_item)
                 if save == 1:
-                    #s_save_loot.append(r_reward_item)
+                    s_save_loot.append(r_reward_item)
         else:
             r_misc_roll = 0
             r_misc_roll = random.randint(1, rwd_potential) # roll for misc loot
@@ -136,75 +132,17 @@ def repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag
     # print final chest
     if save == 0:
         print(f"Your chest contains: {r_final_loot_list}")
-"""           
-total_loop = True
-while total_loop: # main program loop
 
-    print("Kyanize's Barrows Loot Simulator!")
-
-    # number of sims to run
-    try:
-        num_sims = int(input("\nHow many simulations do you want to run: "))
-    except ValueError:
-        print("Invalid input.")
-        continue
-    
-    # choose one chest or many
-    print("\nDo you want to see one final loot chest, or many individual chests?")
-    num_chests = str(input("Type 'one' or 'many': "))
-    if num_chests.lower() == "one":
-        for x in range(1, num_sims):
-            # TODO: add main function
-            repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag, 1)
-        add_to_save_loot()
-        print(f"\nYour total loot chest is: {s_save_loot}")
-        global s_coin_amt, s_mind_rune_amt, s_chaos_rune_amt, s_death_rune_amt, s_blood_rune_amt, s_bolt_amt
-        s_coin_amt, s_mind_rune_amt, s_chaos_rune_amt, s_death_rune_amt, s_blood_rune_amt, s_bolt_amt = 0, 0, 0, 0, 0, 0
-        s_save_loot = []
-    elif save_chests.lower() == "many":
-        for x in range(1, num_sims):
-            # TODO: add main function
-            repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag)
-            time.sleep(.1)
-    else:
-        print("Invalid value.")
-
-    # start over request
-    while(start_over_loop):
-        print("\nRun another simulation?")
-        total_loop_input = str(input("Type Y or N: "))
-        match total_loop_input.lower():
-            case "y":
-                start_over_loop = False
-            case "n":
-                print("Farewell!")
-                start_over_loop = False
-                total_loop = False
-            case _:
-                print("Invalid input.")
-
-
-
-
-    # resettable variables
-    bros_killed_loop, rewards_loop, diary_loop, start_over_loop = True, True, True, True
-    diary_flag, d_med_flag, lh_key_flag, th_key_flag = False, False, False, False
-    total_loop_input, bros_list_in, diary_in = "", "", ""
-    bros_killed_list, item_rwd_list, final_loot_list = [], [], []
-    rwd_in = 0.0
-    rwd_potential, misc_roll = 0, 0
-    coin_amt, mind_rune_amt, chaos_rune_amt, death_rune_amt, blood_rune_amt, bolt_rack_amt = 0, 0, 0, 0, 0, 0
-
-
-    # TODO: convert/combine to main function
-
+def brothers_inputs(bros_killed_list):
+    bros_killed_loop = True
+    bros_list_in = ""
     # barrows brothers killed input loop
     print("Which Barrows brothers have you killed?")
     while(bros_killed_loop):
         bros_list_in = str(input("\nType one brothers name, all for all brothers, none, or done: "))
-        if bros_list_in == str("none").lower().strip(): # if none, clear list, end loop
+        if bros_list_in == str("none").lower().strip(): # if none end loop
             bros_killed_loop = False
-        elif bros_list_in == str("done").lower().strip(): # if done, end loop
+        elif bros_list_in == str("done").lower().strip(): # if done end loop
             bros_killed_loop = False
         elif bros_list_in == "all":
             for x in BROTHERS_LIST:
@@ -220,10 +158,14 @@ while total_loop: # main program loop
             print(f"{', '.join(map(str, bros_killed_list))}")
         if len(bros_killed_list) == 6: # end loop if all six brothers added manually
             bros_killed_loop = False
+    return bros_killed_list
 
+def rwd_inputs(rwd_potential):
+    rwd_loop = True
+    rwd_in = ""
     # rewards potential input loop
     print("\nWhat is your reward potential?")
-    while(rewards_loop):
+    while(rwd_loop):
         try: # catching input exception if not valid float
             rwd_in = float(input("Type number without '%' sign: "))
         except ValueError:
@@ -233,8 +175,12 @@ while total_loop: # main program loop
             print("Invalid value.")
         else: # if valid input, add to reward potential, end loop
             rwd_potential += int(rwd_in) * 10
-            rewards_loop = False
+            rwd_loop = False
+        return rwd_potential
 
+def diary_inputs():
+    diary_loop, diary_flag = True, False
+    diary_in = ""
     # morytania hard diary completion flag
     print("\nHave you completed the Morytania Hard diaries?")
     while(diary_loop):
@@ -244,69 +190,120 @@ while total_loop: # main program loop
         elif diary_in.lower() == "y":
             diary_flag = True
             diary_loop = False
-        else:
-            diary_loop = False
+        return diary_flag
 
-    # flag and loot table functions
-    add_loot_and_rwd_potential("Torag", TORAG_LOOT, 115)
-    add_loot_and_rwd_potential("Dharok", DHAROK_LOOT, 115)
-    add_loot_and_rwd_potential("Ahrim", AHRIM_LOOT, 98)
-    add_loot_and_rwd_potential("Guthan", GUTHAN_LOOT, 115)
-    add_loot_and_rwd_potential("Karil", KARIL_LOOT, 98)
-    add_loot_and_rwd_potential("Verac", VERAC_LOOT, 115)
+def get_inputs(bros_killed_list, rwd_potential):
+    brothers_inputs(bros_killed_list)
+    rwd_inputs(rwd_potential)
+    diary_inputs()
+    
+# main sim prgm
+def main(save = 0):
+    total_loop = True
+    while total_loop: # main prgm loop
 
-    # calculate final rewards potential
-    if rwd_potential > 1000:
-        rwd_potential -= rwd_potential % 1000
-    rwd_potential += len(bros_killed_list) * 2
+        # global variabes
+        global s_coin_amt, s_mind_rune_amt, s_chaos_rune_amt, s_death_rune_amt, s_blood_rune_amt, s_bolt_amt
+        global s_save_loot
 
-    # add items to loot, rng rolls
-    for x in range(1, len(bros_killed_list) + 2): # add items to loot table
-        item_roll = 0
-        items_loot = 450 - (58 * len(bros_killed_list)) # calculating barrows item chance
-        item_roll = random.randint(1, items_loot) # roll for chance
-        if item_roll == 1: # award barrows loot
-            reward_item = item_rwd_list[random.randint(0, len(item_rwd_list) - 1)] # roll for item
-            if reward_item not in final_loot_list: # can't have same item in chest twice
-                final_loot_list.append(reward_item)
-        else:
-            misc_roll = 0
-            misc_roll = random.randint(1, rwd_potential) # roll for misc loot
-            mind_rune_amt += roll_for_runes(381, misc_roll, 505, DIFFICULTY_MOD["Mind_Diff"]) # roll mind runes
-            chaos_rune_amt += roll_for_runes(506, misc_roll, 630, DIFFICULTY_MOD["Chaos_Diff"]) # roll chaos runes
-            death_rune_amt += roll_for_runes(631, misc_roll, 755, DIFFICULTY_MOD["Death_Diff"]) # roll death runes
-            blood_rune_amt += roll_for_runes(756, misc_roll, 880, DIFFICULTY_MOD["Blood_Diff"]) # roll blood runes
-            if 380 >= misc_roll >= 1: # roll for coins
-                coin_amt += (misc_roll * DIFFICULTY_MOD["Coin_Diff"])
-            elif 881 >= misc_roll >= 1005: # roll bolt racks
-                bolt_rack_amt += (misc_roll / DIFFICULTY_MOD["Bolt_Diff"])
-            elif 1006 >= misc_roll >= 1011: # roll key half
-                key_roll = random.randint(1, 2)
-                if key_roll == 1:
-                    lh_key_flag = True
-                else:
-                    th_key_flag = True
-            elif misc_roll == 1012:
-                d_med_flag = True
-        
-    # add misc items to loot list
-    add_to_chest(coin_amt, "Coins") # add coins
-    add_to_chest(mind_rune_amt, "Mind Runes") # add mind runes
-    add_to_chest(chaos_rune_amt, "Chaos Runes") # add chaos runes
-    add_to_chest(death_rune_amt, "Death Runes") # add death runes
-    add_to_chest(blood_rune_amt, "Blood Runes") # add chaos runes
-    add_to_chest(bolt_rack_amt, "Bolt Racks") # add chaos runes
-    if lh_key_flag:
-        final_loot_list.append("Loop Half of Key") # add key loop half
-    elif th_key_flag:
-        final_loot_list.append("Tooth half of Key") # add key tooth half
-    if d_med_flag:
-        final_loot_list.append("Dragon Med Helm")
+        # resettable variablesstart_over_loop = True, True
+        d_med_flag, lh_key_flag, th_key_flag = False, False, False
+        bros_killed_list, item_rwd_list, final_loot_list = [], [], []
+        rwd_in = 0.0
+        rwd_potential, misc_roll = 0, 0
+        coin_amt, mind_rune_amt, chaos_rune_amt, death_rune_amt, blood_rune_amt, bolt_rack_amt = 0, 0, 0, 0, 0, 0
 
-    # add clue scroll to loot
-    clue_chance = random.randint(1, int(200 / len(bros_killed_list)))
-    if clue_chance == 1:
-        final_loot_list.append("Clue Scroll (elite)")
+        # flag and loot table functions
+        add_loot_and_rwd_potential("Torag", TORAG_LOOT, 115)
+        add_loot_and_rwd_potential("Dharok", DHAROK_LOOT, 115)
+        add_loot_and_rwd_potential("Ahrim", AHRIM_LOOT, 98)
+        add_loot_and_rwd_potential("Guthan", GUTHAN_LOOT, 115)
+        add_loot_and_rwd_potential("Karil", KARIL_LOOT, 98)
+        add_loot_and_rwd_potential("Verac", VERAC_LOOT, 115)
 
-    # print final chest
-    print(f"Your chest contains: {final_loot_list}")
+        # calculate final rewards potential
+        if rwd_potential > 1000:
+            rwd_potential -= rwd_potential % 1000
+        rwd_potential += len(bros_killed_list) * 2
+
+        # add items to loot, rng rolls
+        for x in range(1, len(bros_killed_list) + 2): # add items to loot table
+            item_roll = 0
+            items_loot = 450 - (58 * len(bros_killed_list)) # calculating barrows item chance
+            item_roll = random.randint(1, items_loot) # roll for chance
+            if item_roll == 1: # award barrows loot
+                reward_item = item_rwd_list[random.randint(0, len(item_rwd_list) - 1)] # roll for item
+                if reward_item not in final_loot_list: # can't have same item in chest twice
+                    final_loot_list.append(reward_item)
+            else:
+                misc_roll = 0
+                misc_roll = random.randint(1, rwd_potential) # roll for misc loot
+                mind_rune_amt += roll_for_runes(381, misc_roll, 505, DIFFICULTY_MOD["Mind_Diff"]) # roll mind runes
+                chaos_rune_amt += roll_for_runes(506, misc_roll, 630, DIFFICULTY_MOD["Chaos_Diff"]) # roll chaos runes
+                death_rune_amt += roll_for_runes(631, misc_roll, 755, DIFFICULTY_MOD["Death_Diff"]) # roll death runes
+                blood_rune_amt += roll_for_runes(756, misc_roll, 880, DIFFICULTY_MOD["Blood_Diff"]) # roll blood runes
+                if 380 >= misc_roll >= 1: # roll for coins
+                    coin_amt += (misc_roll * DIFFICULTY_MOD["Coin_Diff"])
+                elif 881 >= misc_roll >= 1005: # roll bolt racks
+                    bolt_rack_amt += (misc_roll / DIFFICULTY_MOD["Bolt_Diff"])
+                elif 1006 >= misc_roll >= 1011: # roll key half
+                    key_roll = random.randint(1, 2)
+                    if key_roll == 1:
+                        lh_key_flag = True
+                    else:
+                        th_key_flag = True
+                elif misc_roll == 1012:
+                    d_med_flag = True
+            
+        # add misc items to loot list
+        add_to_chest(coin_amt, "Coins") # add coins
+        add_to_chest(mind_rune_amt, "Mind Runes") # add mind runes
+        add_to_chest(chaos_rune_amt, "Chaos Runes") # add chaos runes
+        add_to_chest(death_rune_amt, "Death Runes") # add death runes
+        add_to_chest(blood_rune_amt, "Blood Runes") # add chaos runes
+        add_to_chest(bolt_rack_amt, "Bolt Racks") # add chaos runes
+        if lh_key_flag:
+            final_loot_list.append("Loop Half of Key") # add key loop half
+        elif th_key_flag:
+            final_loot_list.append("Tooth half of Key") # add key tooth half
+        if d_med_flag:
+            final_loot_list.append("Dragon Med Helm")
+
+        # add clue scroll to loot
+        clue_chance = random.randint(1, int(200 / len(bros_killed_list)))
+        if clue_chance == 1:
+            final_loot_list.append("Clue Scroll (elite)")
+
+        # print final chest
+        print(f"Your chest contains: {final_loot_list}")
+
+main_loop = True
+while main_loop:
+    multi_input = int(input("\nHow many simulations do you want to run: "))
+    print("\nDo you want to see one final loot chest, or many individual chests?")
+    num_chests = str(input("Type 'one' or 'many': "))
+    if num_chests.lower() == "one":
+        for x in range(1, multi_input):
+            main(1)
+            # repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag, 1)
+            add_to_save_loot()
+        print(f"\nYour total loot chest is: {s_save_loot}")
+    elif num_chests.lower() == "many":
+        for x in range(1, multi_input):
+            main()
+            # repeat_simulation(bros_killed_list, item_rwd_list, rwd_potential, diary_flag)
+            time.sleep(.1)
+    else:
+        print("Invalid value.")
+
+    return_to_start = True
+    # start over request
+    while return_to_start:
+        print("\nRun another simulation?")
+        return_to_start = str(input("Type Y or N: "))
+        match return_to_start.lower():
+            case "y":
+                return_to_start = False
+            case "n":
+                print("Farewell!")
+                main_loop = False
